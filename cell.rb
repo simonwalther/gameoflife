@@ -1,12 +1,12 @@
 class Cell
   attr_accessor :posx, :posy, :alive
 
-  def initialize(posx, posy)
+  def initialize(posx, posy, alive)
     #positions x and y
     @posx = posx
     @posy = posy
 
     #alive true or nil
-    @alive = true
+    @alive = alive
   end
 end
