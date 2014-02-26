@@ -94,10 +94,10 @@ class Main
         end
 
         if c == 2 || c == 3
-          puts "la cellule #{slct.posx};#{slct.posy} restera vivante"
+          #la cellule restera vivante
           slct.alivenextstep = true
         else
-          puts "la cellule #{slct.posx};#{slct.posy} meurt"
+          #la cellule meurt
           slct.alivenextstep = false
         end
       elsif slct.alive == false && slct != nil
@@ -116,10 +116,10 @@ class Main
         end
 
         if c == 3
-          puts "la cellule #{slct.posx};#{slct.posy} nait"
+          #la cellule nait"
           slct.alivenextstep = true
         else
-          puts "la cellule #{slct.posx};#{slct.posy} restera morte"
+          #la cellule restera morte
           slct.alivenextstep = false
         end
       end
@@ -134,6 +134,34 @@ class Main
       slct.alivenextstep = nil
     end
   end
+
+  def displaygrid
+    board = Board.new
+    grid = Array.new
+
+    numbercell.times do |a|
+      slct = celllist[a]
+
+      if slct.alive == true
+        grid << "o "
+      elsif slct.alive == false
+        grid << "- "
+      end
+    end
+
+    b = 1
+
+    numbercell.times do |a|
+      print "#{grid[a]}"
+
+      if b == board.width
+        puts "\n"
+        b = 0
+      end
+
+      b += 1
+    end
+  end
 end
 
 main = Main.new
@@ -142,7 +170,8 @@ celllist = main.celllist
 cell = celllist[1]
 
 while true do
+  main.displaygrid
   main.isalive
-  sleep(1.0)
+  sleep(2.0)
   system "clear" or system "cls"
 end
