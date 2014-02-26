@@ -2,7 +2,7 @@ require 'board'
 require 'cell'
 
 class Main
-  attr_accessor :celllist, :numbercell, :celllistlength
+  attr_accessor :celllist, :numbercell, :celllistlength, :nbtick
 
   def initialize
     board = Board.new
@@ -10,6 +10,7 @@ class Main
     @celllist = Array.new
     @numbercell = board.numbercell
     @width = board.width
+    @nbtick = nbtick
 
     ##### initialize cells #####
     a = 1
@@ -26,40 +27,6 @@ class Main
       end
     end
 
-    z = 1
-    x = 1
-
-    numbercell.times do
-      selected = celllist.select { |a| a.posx == z && a.posy == x }
-      slct = selected[0]
-
-      if z == 4 && x == 4
-      ############################### case: restera vivante ##############################
-        slct.alive = true
-
-        toaliveslct = celllist.select { |a| a.posx == slct.neighbour[0].first && a.posy == slct.neighbour[0].last }
-        ngbslct = toaliveslct[0]
-
-        ngbslct.alive = true
-
-        toaliveslct = celllist.select { |a| a.posx == slct.neighbour[1].first && a.posy == slct.neighbour[1].last }
-        ngbslct = toaliveslct[0]
-
-        ngbslct.alive = true
-
-      elsif z == 7 && x == 4
-      ############################### case: meurt ##############################
-        slct.alive = true
-      end
-
-      z += 1
-
-      if z == (@width + 1)
-        z = 1
-        x += 1
-      end
-    end
-    ############################
     cell = celllist[1]
     @neighbour = cell.neighbour
   end
@@ -73,19 +40,18 @@ class Main
     # x = 1
 
     numbercell.times do |z|
-      slct = celllist[z]
+      select_this = celllist[z]
 
       b = 0
       c = 0
 
-      if slct.alive == true && slct != nil
+      if select_this.alive == true && select_this != nil
         8.times do |a|
-          neighbourslct = celllist.select { |a| a.posx == slct.neighbour[b].first && a.posy == slct.neighbour[b].last }
-          ngbslct = neighbourslct[0]
+          neighbour_select = celllist.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }.first
 
-          if ngbslct != nil
+          if neighbour_select != nil
 
-            if ngbslct.alive == true
+            if neighbour_select.alive == true
               c += 1
             end
           end
@@ -95,19 +61,18 @@ class Main
 
         if c == 2 || c == 3
           #la cellule restera vivante
-          slct.alivenextstep = true
+          select_this.alivenextstep = true
         else
           #la cellule meurt
-          slct.alivenextstep = false
+          select_this.alivenextstep = false
         end
-      elsif slct.alive == false && slct != nil
+      elsif select_this.alive == false && select_this != nil
         8.times do |a|
-          neighbourslct = celllist.select { |a| a.posx == slct.neighbour[b].first && a.posy == slct.neighbour[b].last }
-          ngbslct = neighbourslct[0]
+          neighbour_select = celllist.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }.first
 
-          if ngbslct != nil
+          if neighbour_select != nil
 
-            if ngbslct.alive == true
+            if neighbour_select.alive == true
               c += 1
             end
           end
@@ -117,10 +82,10 @@ class Main
 
         if c == 3
           #la cellule nait"
-          slct.alivenextstep = true
+          select_this.alivenextstep = true
         else
           #la cellule restera morte
-          slct.alivenextstep = false
+          select_this.alivenextstep = false
         end
       end
 
@@ -128,10 +93,10 @@ class Main
     end
 
     numbercell.times do |a|
-      slct = celllist[a]
+      select_this = celllist[a]
 
-      slct.alive = slct.alivenextstep
-      slct.alivenextstep = nil
+      select_this.alive = select_this.alivenextstep
+      select_this.alivenextstep = nil
     end
   end
 
@@ -140,11 +105,11 @@ class Main
     grid = Array.new
 
     numbercell.times do |a|
-      slct = celllist[a]
+      select_this = celllist[a]
 
-      if slct.alive == true
-        grid << "o "
-      elsif slct.alive == false
+      if select_this.alive == true
+        grid << "@ "
+      elsif select_this.alive == false
         grid << "- "
       end
     end
@@ -162,16 +127,52 @@ class Main
       b += 1
     end
   end
+
+  def definenbtick
+    print "please enter the number of tick: "
+    @nbtick = STDIN.gets.chomp.to_i
+  end
+
+  def definealive
+    puts "please enter alive cells position"
+    puts "to stop enter two times 'stop'"
+    inputx = nil
+    inputy = nil
+    cell_alives = Array.new
+
+    until inputx == "stop" || inputy == "stop" do
+      pos = Array.new
+      print "position x: "
+      inputx = STDIN.gets.chomp
+      print "position y: "
+      inputy = STDIN.gets.chomp
+
+      if inputx != "stop" && inputy != "stop"
+        pos << inputx.to_i << inputy.to_i
+        cell_alives << pos
+      end
+    end
+
+    puts "#{cell_alives}"
+
+    cell_alives.each do |cell_alive|
+      select_this = celllist.select { |a| a.posx == cell_alive.first && a.posy == cell_alive.last }.first
+      select_this.alive = true
+    end
+  end
 end
 
 main = Main.new
+main.definenbtick
+main.definealive
+
 celllist = main.celllist
+nbtick = main.nbtick
 
 cell = celllist[1]
 
-while true do
+nbtick.times do
   main.displaygrid
   main.isalive
-  sleep(2.0)
   system "clear" or system "cls"
 end

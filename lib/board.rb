@@ -2,8 +2,8 @@ class Board
   attr_accessor :width, :height, :numbercell
 
   def initialize
-    @width = 10
-    @height = 10
+    @width = 30
+    @height = 30
     @numbercell = @width * @height
   end
 end

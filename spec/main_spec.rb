@@ -5,7 +5,7 @@ describe Main do
   context 'after created' do
     subject { Main.new }
     its(:celllist) { should_not == nil }
-    its(:celllistlength) { should == 100 }
+    its(:celllistlength) { should == 900 }
   end
 
   context 'Cell 4;4' do
