@@ -2,22 +2,22 @@ require 'board'
 require 'cell'
 
 class Main
-  attr_accessor :celllist, :numbercell, :celllistlength, :nbtick
+  attr_accessor :cell_list, :number_cell, :cell_list_length, :nb_tick
 
   def initialize
     board = Board.new
 
-    @celllist = Array.new
-    @numbercell = board.numbercell
+    @cell_list = Array.new
+    @number_cell = board.number_cell
     @width = board.width
-    @nbtick = nbtick
+    @nb_tick = nb_tick
 
     ##### initialize cells #####
     a = 1
     b = 1
 
-    numbercell.times do
-      @celllist << Cell.new(a, b, false)
+    number_cell.times do
+      @cell_list << Cell.new(a, b, false)
 
       a += 1
 
@@ -27,27 +27,27 @@ class Main
       end
     end
 
-    cell = celllist[1]
+    cell = cell_list[1]
     @neighbour = cell.neighbour
   end
 
-  def celllistlength
-    @celllistlength = celllist.length
+  def cell_list_length
+    @cell_list_length = cell_list.length
   end
 
   def isalive
     # z = 1
     # x = 1
 
-    numbercell.times do |z|
-      select_this = celllist[z]
+    number_cell.times do |z|
+      select_this = cell_list[z]
 
       b = 0
       c = 0
 
       if select_this.alive == true && select_this != nil
         8.times do |a|
-          neighbour_select = celllist.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }.first
+          neighbour_select = cell_list.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }.first
 
           if neighbour_select != nil
 
@@ -68,7 +68,7 @@ class Main
         end
       elsif select_this.alive == false && select_this != nil
         8.times do |a|
-          neighbour_select = celllist.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }.first
+          neighbour_select = cell_list.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }.first
 
           if neighbour_select != nil
 
@@ -92,8 +92,8 @@ class Main
       c = 0 #reset
     end
 
-    numbercell.times do |a|
-      select_this = celllist[a]
+    number_cell.times do |a|
+      select_this = cell_list[a]
 
       select_this.alive = select_this.alivenextstep
       select_this.alivenextstep = nil
@@ -104,8 +104,8 @@ class Main
     board = Board.new
     grid = Array.new
 
-    numbercell.times do |a|
-      select_this = celllist[a]
+    number_cell.times do |a|
+      select_this = cell_list[a]
 
       if select_this.alive == true
         grid << "@ "
@@ -116,7 +116,7 @@ class Main
 
     b = 1
 
-    numbercell.times do |a|
+    number_cell.times do |a|
       print "#{grid[a]}"
 
       if b == board.width
@@ -130,7 +130,7 @@ class Main
 
   def definenbtick
     print "please enter the number of tick: "
-    @nbtick = STDIN.gets.chomp.to_i
+    @nb_tick = STDIN.gets.chomp.to_i
   end
 
   def definealive
@@ -156,7 +156,7 @@ class Main
     puts "#{cell_alives}"
 
     cell_alives.each do |cell_alive|
-      select_this = celllist.select { |a| a.posx == cell_alive.first && a.posy == cell_alive.last }.first
+      select_this = cell_list.select { |a| a.posx == cell_alive.first && a.posy == cell_alive.last }.first
       select_this.alive = true
     end
   end
@@ -166,12 +166,12 @@ main = Main.new
 main.definenbtick
 main.definealive
 
-celllist = main.celllist
-nbtick = main.nbtick
+cell_list = main.cell_list
+nb_tick = main.nb_tick
 
-cell = celllist[1]
+cell = cell_list[1]
 
-nbtick.times do
+nb_tick.times do
   main.displaygrid
   main.isalive
   system "clear" or system "cls"

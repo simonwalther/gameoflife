@@ -4,8 +4,8 @@ require 'main'
 describe Main do
   context 'after created' do
     subject { Main.new }
-    its(:celllist) { should_not == nil }
-    its(:celllistlength) { should == 900 }
+    its(:cell_list) { should_not == nil }
+    its(:cell_list_length) { should == 900 }
   end
 
   context 'Cell 4;4' do

@@ -7,6 +7,6 @@ describe Board do
 
     its(:width) { should == 30 }
     its(:height) { should == 30 }
-    its(:numbercell) { should == 900 }
+    its(:number_cell) { should == 900 }
   end
 end
