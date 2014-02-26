@@ -2,12 +2,12 @@ require 'spec_helper'
 require 'cell'
 
 describe Cell do
-  context 'after created' do
-    subject { Cell.new(1, 1, false) }
+  context '4;4 after created' do
+    subject { Cell.new(4, 4, true) }
 
-    its(:posx) { should == 1 }
-    its(:posy) { should == 1 }
+    its(:posx) { should == 4 }
+    its(:posy) { should == 4 }
 
-    its(:alive) { should == false }
+    its(:alive) { should == true }
   end
 end

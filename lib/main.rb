@@ -33,15 +33,6 @@ class Main
       selected = celllist.select { |a| a.posx == z && a.posy == x }
       slct = selected[0]
 
-      slct.neighbour << [slct.posx,   slct.posy+1]
-      slct.neighbour << [slct.posx+1, slct.posy]
-      slct.neighbour << [slct.posx+1, slct.posy+1]
-      slct.neighbour << [slct.posx,   slct.posy-1]
-      slct.neighbour << [slct.posx-1, slct.posy]
-      slct.neighbour << [slct.posx-1, slct.posy-1]
-      slct.neighbour << [slct.posx+1, slct.posy-1]
-      slct.neighbour << [slct.posx-1, slct.posy+1]
-
       if z == 4 && x == 4
       ############################### case: restera vivante ##############################
         slct.alive = true
@@ -78,12 +69,11 @@ class Main
   end
 
   def isalive
-    z = 1
-    x = 1
+    # z = 1
+    # x = 1
 
-    numbercell.times do
-      selected = celllist.select { |a| a.posx == z && a.posy == x }
-      slct = selected[0]
+    numbercell.times do |z|
+      slct = celllist[z]
 
       b = 0
       c = 0
@@ -105,8 +95,10 @@ class Main
 
         if c == 2 || c == 3
           puts "la cellule #{slct.posx};#{slct.posy} restera vivante"
+          slct.alivenextstep = true
         else
           puts "la cellule #{slct.posx};#{slct.posy} meurt"
+          slct.alivenextstep = false
         end
       elsif slct.alive == false && slct != nil
         8.times do |a|
@@ -125,18 +117,21 @@ class Main
 
         if c == 3
           puts "la cellule #{slct.posx};#{slct.posy} nait"
+          slct.alivenextstep = true
         else
           puts "la cellule #{slct.posx};#{slct.posy} restera morte"
+          slct.alivenextstep = false
         end
       end
 
       c = 0 #reset
-      z += 1
+    end
 
-      if z == (@width + 1)
-        z = 1
-        x += 1
-      end
+    numbercell.times do |a|
+      slct = celllist[a]
+
+      slct.alive = slct.alivenextstep
+      slct.alivenextstep = nil
     end
   end
 end
@@ -145,4 +140,9 @@ main = Main.new
 celllist = main.celllist
 
 cell = celllist[1]
-main.isalive
+
+while true do
+  main.isalive
+  sleep(1.0)
+  system "clear" or system "cls"
+end
