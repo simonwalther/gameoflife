@@ -1,5 +1,5 @@
 class Cell
-  attr_accessor :posx, :posy, :alive, :neighbour, :alivenextstep
+  attr_accessor :posx, :posy, :alive, :neighbour, :alive_next_step
 
   def initialize(posx, posy, alive)
     #positions x and y
@@ -18,7 +18,7 @@ class Cell
       [posx+1, posy-1],
       [posx-1, posy+1]
     ]
-    #alivenextstep
-    @alivenextstep = alivenextstep
+    #alive_next_step
+    @alive_next_step = alive_next_step
   end
 end

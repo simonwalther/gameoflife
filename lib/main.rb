@@ -36,9 +36,6 @@ class Main
   end
 
   def isalive
-    # z = 1
-    # x = 1
-
     number_cell.times do |z|
       select_this = cell_list[z]
 
@@ -61,10 +58,10 @@ class Main
 
         if c == 2 || c == 3
           #la cellule restera vivante
-          select_this.alivenextstep = true
+          select_this.alive_next_step = true
         else
           #la cellule meurt
-          select_this.alivenextstep = false
+          select_this.alive_next_step = false
         end
       elsif select_this.alive == false && select_this != nil
         8.times do |a|
@@ -82,10 +79,10 @@ class Main
 
         if c == 3
           #la cellule nait"
-          select_this.alivenextstep = true
+          select_this.alive_next_step = true
         else
           #la cellule restera morte
-          select_this.alivenextstep = false
+          select_this.alive_next_step = false
         end
       end
 
@@ -95,8 +92,8 @@ class Main
     number_cell.times do |a|
       select_this = cell_list[a]
 
-      select_this.alive = select_this.alivenextstep
-      select_this.alivenextstep = nil
+      select_this.alive = select_this.alive_next_step
+      select_this.alive_next_step = nil
     end
   end
 
@@ -110,7 +107,7 @@ class Main
       if select_this.alive == true
         grid << "@ "
       elsif select_this.alive == false
-        grid << "- "
+        grid << "  "
       end
     end
 
