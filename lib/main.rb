@@ -2,42 +2,23 @@ require 'board'
 require 'cell'
 
 class Main
-  attr_accessor :cell_list, :number_cell, :cell_list_length, :nb_tick
+  attr_accessor :number_cell, :cells_length, :nb_tick
 
-  def initialize
-    board = Board.new
-
-    @cell_list = Array.new
+  def initialize(board = Board.new)
+    # @cells = Array.new
     @number_cell = board.number_cell
     @width = board.width
     @nb_tick = nb_tick
+    @cells = board.cells
 
-    ##### initialize cells #####
-    a = 1
-    b = 1
-
-    number_cell.times do
-      @cell_list << Cell.new(a, b, false)
-
-      a += 1
-
-      if a == (@width + 1)
-        a = 1
-        b += 1
-      end
-    end
-
-    cell = cell_list[1]
+    ##### initialize @cells #####
+    cell = @cells[1]
     @neighbour = cell.neighbour
-  end
-
-  def cell_list_length
-    @cell_list_length = cell_list.length
   end
 
   def isalive
     cell_with_status_alive = Array.new
-    cell_with_status_alive = cell_list.select { |a| a.alive == true }
+    cell_with_status_alive = @cells.select { |a| a.alive == true }
     cell_to_test = Array.new
     neighbour_of_alive = Array.new
     neighbour_of_neighbour_of_alive = Array.new
@@ -50,7 +31,7 @@ class Main
 
     neighbour_of_alive.length.times do |g|
       neighbour_of_alive[g].length.times do |k|
-        tamp = cell_list.select { |a| a.posx == neighbour_of_alive[g][k].first && a.posy == neighbour_of_alive[g][k].last }
+        tamp = @cells.select { |a| a.posx == neighbour_of_alive[g][k].first && a.posy == neighbour_of_alive[g][k].last }
         select_neighbour_of_alive << tamp
       end
     end
@@ -62,7 +43,7 @@ class Main
     end
 
     neighbour_of_alive.length.times do |l|
-      tamp = cell_list.select { |a| a.posx == neighbour_of_alive[l].posx && a.posy == neighbour_of_alive[l].posy }
+      tamp = @cells.select { |a| a.posx == neighbour_of_alive[l].posx && a.posy == neighbour_of_alive[l].posy }
       select_neighbour_of_neighbour_of_alive << tamp
     end
 
@@ -82,7 +63,7 @@ class Main
 
         if select_this.alive == true && select_this != nil
           8.times do |a|
-            neighbour_select = cell_list.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }
+            neighbour_select = @cells.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }
 
             if neighbour_select.first != nil
               if neighbour_select.first.alive == true
@@ -102,7 +83,7 @@ class Main
           end
         elsif select_this.alive == false && select_this != nil
           8.times do |a|
-            neighbour_select = cell_list.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }
+            neighbour_select = @cells.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }
 
             if neighbour_select.first != nil
               if neighbour_select.first.alive == true
@@ -127,7 +108,7 @@ class Main
     end
 
     number_cell.times do |a|
-      select_this = cell_list[a]
+      select_this = @cells[a]
 
       if select_this.alive_next_step == nil
         select_this.alive = false
@@ -146,12 +127,12 @@ class Main
     b = 1
 
     number_cell.times do |a|
-      select_this = cell_list[a]
+      select_this = @cells[a]
 
       if select_this.alive == true
-        grid << "@ "
+        grid << "& "
       elsif select_this.alive == false
-        grid << "~ "
+        grid << "  "
       end
 
       if b == board.width
@@ -162,6 +143,7 @@ class Main
       b += 1
     end
     print "#{grid.join}"
+    puts "\n"
   end
 
   def definenbtick
@@ -170,7 +152,7 @@ class Main
   end
 
   def definealive
-    puts "please enter alive cells position"
+    puts "please enter alive @cells position"
     puts "to stop enter two times 'stop'"
     inputx = nil
     inputy = nil
@@ -192,24 +174,24 @@ class Main
     puts "#{cell_alives}"
 
     cell_alives.each do |cell_alive|
-      select_this = cell_list.select { |a| a.posx == cell_alive.first && a.posy == cell_alive.last }.first
+      select_this = @cells.select { |a| a.posx == cell_alive.first && a.posy == cell_alive.last }.first
       select_this.alive = true
     end
   end
 end
 
-main = Main.new
+board = Board.new
+main = Main.new(board)
 main.definenbtick
 main.definealive
 
-cell_list = main.cell_list
 nb_tick = main.nb_tick
 
-cell = cell_list[1]
+cell = board.cells[1]
 
 nb_tick.times do
+  main.displaygrid
   main.isalive
   system "clear" or system "cls"
-  main.displaygrid
   # sleep(1.0)
 end

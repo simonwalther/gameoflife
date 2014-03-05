@@ -8,5 +8,7 @@ describe Board do
     its(:width) { should == 30 }
     its(:height) { should == 30 }
     its(:number_cell) { should == 900 }
+    its(:cells) { should_not == nil }
+    its(:cells_length) { should == 900 }
   end
 end
