@@ -36,63 +36,104 @@ class Main
   end
 
   def isalive
-    number_cell.times do |z|
-      select_this = cell_list[z]
+    cell_with_status_alive = Array.new
+    cell_with_status_alive = cell_list.select { |a| a.alive == true }
+    cell_to_test = Array.new
+    neighbour_of_alive = Array.new
+    neighbour_of_neighbour_of_alive = Array.new
+    select_neighbour_of_alive = Array.new
+    select_neighbour_of_neighbour_of_alive = Array.new
 
-      b = 0
-      c = 0
+    cell_with_status_alive.length.times do |r|
+      neighbour_of_alive << cell_with_status_alive[r].neighbour
+    end
 
-      if select_this.alive == true && select_this != nil
-        8.times do |a|
-          neighbour_select = cell_list.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }.first
-
-          if neighbour_select != nil
-
-            if neighbour_select.alive == true
-              c += 1
-            end
-          end
-
-          b += 1
-        end
-
-        if c == 2 || c == 3
-          #la cellule restera vivante
-          select_this.alive_next_step = true
-        else
-          #la cellule meurt
-          select_this.alive_next_step = false
-        end
-      elsif select_this.alive == false && select_this != nil
-        8.times do |a|
-          neighbour_select = cell_list.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }.first
-
-          if neighbour_select != nil
-
-            if neighbour_select.alive == true
-              c += 1
-            end
-          end
-
-          b += 1
-        end
-
-        if c == 3
-          #la cellule nait"
-          select_this.alive_next_step = true
-        else
-          #la cellule restera morte
-          select_this.alive_next_step = false
-        end
+    neighbour_of_alive.length.times do |g|
+      neighbour_of_alive[g].length.times do |k|
+        tamp = cell_list.select { |a| a.posx == neighbour_of_alive[g][k].first && a.posy == neighbour_of_alive[g][k].last }
+        select_neighbour_of_alive << tamp
       end
+    end
 
-      c = 0 #reset
+    neighbour_of_alive = []
+
+    select_neighbour_of_alive.length.times do |q|
+      neighbour_of_alive << select_neighbour_of_alive[q].first
+    end
+
+    neighbour_of_alive.length.times do |l|
+      tamp = cell_list.select { |a| a.posx == neighbour_of_alive[l].posx && a.posy == neighbour_of_alive[l].posy }
+      select_neighbour_of_neighbour_of_alive << tamp
+    end
+
+    select_neighbour_of_neighbour_of_alive.length.times do |f|
+      neighbour_of_neighbour_of_alive << select_neighbour_of_alive[f].first
+    end
+
+    cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive
+
+    cell_to_test.length.times do |z|
+      cell_to_test[z].length.times do |r|
+        select_this = cell_to_test[z][r]
+
+        b = 0
+        c = 0
+
+        if select_this.alive == true && select_this != nil
+          8.times do |a|
+            neighbour_select = cell_list.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }
+
+            if neighbour_select.first != nil
+              if neighbour_select.first.alive == true
+                c += 1
+              end
+            end
+
+            b += 1
+          end
+
+          if c == 2 || c == 3
+            #la cellule restera vivante
+            select_this.alive_next_step = true
+          else
+            #la cellule meurt
+            select_this.alive_next_step = false
+          end
+        elsif select_this.alive == false && select_this != nil
+          8.times do |a|
+            neighbour_select = cell_list.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }
+
+            if neighbour_select.first != nil
+              if neighbour_select.first.alive == true
+                c += 1
+              end
+            end
+
+            b += 1
+          end
+
+          if c == 3
+            #la cellule nait"
+            select_this.alive_next_step = true
+          else
+            #la cellule restera morte
+            select_this.alive_next_step = false
+          end
+        end
+
+        c = 0 #reset
+      end
     end
 
     number_cell.times do |a|
       select_this = cell_list[a]
 
-      select_this.alive = select_this.alive_next_step
+      if select_this.alive_next_step == nil
+        select_this.alive = false
+      else
+        select_this.alive = select_this.alive_next_step
+      end
+
       select_this.alive_next_step = nil
     end
   end
@@ -101,28 +142,25 @@ class Main
     board = Board.new
     grid = Array.new
 
+    b = 1
+
     number_cell.times do |a|
       select_this = cell_list[a]
 
       if select_this.alive == true
         grid << "@ "
       elsif select_this.alive == false
-        grid << "  "
+        grid << "~ "
       end
-    end
-
-    b = 1
-
-    number_cell.times do |a|
-      print "#{grid[a]}"
 
       if b == board.width
-        puts "\n"
+        grid << "\n"
         b = 0
       end
 
       b += 1
     end
+    print "#{grid.join}"
   end
 
   def definenbtick
@@ -169,7 +207,8 @@ nb_tick = main.nb_tick
 cell = cell_list[1]
 
 nb_tick.times do
-  main.displaygrid
   main.isalive
   system "clear" or system "cls"
+  main.displaygrid
+  # sleep(1.0)
 end
