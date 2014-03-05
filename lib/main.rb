@@ -71,6 +71,7 @@ class Main
     end
 
     cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive
+    cell_to_test = cell_to_test.uniq
 
     cell_to_test.length.times do |z|
       cell_to_test[z].length.times do |r|
