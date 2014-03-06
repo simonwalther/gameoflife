@@ -1,7 +1,7 @@
 class Board
   attr_accessor :cells, :width, :height, :number_cell, :cells_length
 
-  def initialize(width = 30, height = 30)
+  def initialize(width = 50, height = 50)
     @cells = Array.new
     @width = width
     @height = height
@@ -59,9 +59,9 @@ class Board
       select_this = @cells[a]
 
       if select_this.alive == true
-        grid << "& "
+        grid << "O "
       elsif select_this.alive == false
-        grid << "  "
+        grid << "~ "
       end
 
       if b == @width
@@ -84,6 +84,10 @@ class Board
   end
 
   def return_cell(x, y)
-    cells[(y - 1) * width + (x - 1)]
+    if x < 1 || x > width || y < 1 || y > height
+
+    else
+      cells[(y - 1) * width + (x - 1)]
+    end
   end
 end

@@ -3,7 +3,7 @@ require 'board'
 
 describe Board do
   context 'after created' do
-    subject { Board.new }
+    subject { Board.new(30, 30) }
 
     its(:width) { should == 30 }
     its(:height) { should == 30 }
