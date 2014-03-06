@@ -83,7 +83,7 @@ class Board
     @cells
   end
 
-  def cell(x, y)
+  def return_cell(x, y)
     cells[(y - 1) * width + (x - 1)]
   end
 end

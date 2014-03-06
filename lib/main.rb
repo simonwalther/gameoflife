@@ -5,7 +5,7 @@ class Main
   attr_accessor :number_cell, :cells_length, :nb_tick
 
   def initialize(board = Board.new)
-    # @cells = Array.new
+    @board = board
     @number_cell = board.number_cell
     @width = board.width
     @nb_tick = nb_tick
@@ -31,7 +31,7 @@ class Main
 
     neighbour_of_alive.length.times do |g|
       neighbour_of_alive[g].length.times do |k|
-        tamp = @cells.select { |a| a.posx == neighbour_of_alive[g][k].first && a.posy == neighbour_of_alive[g][k].last }
+        tamp = @board.return_cell(neighbour_of_alive[g][k].first, neighbour_of_alive[g][k].last)
         select_neighbour_of_alive << tamp
       end
     end
@@ -39,16 +39,16 @@ class Main
     neighbour_of_alive = []
 
     select_neighbour_of_alive.length.times do |q|
-      neighbour_of_alive << select_neighbour_of_alive[q].first
+      neighbour_of_alive << select_neighbour_of_alive[q]
     end
 
     neighbour_of_alive.length.times do |l|
-      tamp = @cells.select { |a| a.posx == neighbour_of_alive[l].posx && a.posy == neighbour_of_alive[l].posy }
+      tamp = @board.return_cell(select_neighbour_of_alive[l].posx, select_neighbour_of_alive[l].posy)
       select_neighbour_of_neighbour_of_alive << tamp
     end
 
     select_neighbour_of_neighbour_of_alive.length.times do |f|
-      neighbour_of_neighbour_of_alive << select_neighbour_of_alive[f].first
+      neighbour_of_neighbour_of_alive << select_neighbour_of_alive[f]
     end
 
     cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive
@@ -63,10 +63,10 @@ class Main
 
         if select_this.alive == true && select_this != nil
           8.times do |a|
-            neighbour_select = @cells.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }
+            neighbour_select = @board.return_cell(select_this.neighbour[b].first, select_this.neighbour[b].last)
 
-            if neighbour_select.first != nil
-              if neighbour_select.first.alive == true
+            if neighbour_select != nil
+              if neighbour_select.alive == true
                 c += 1
               end
             end
@@ -83,10 +83,10 @@ class Main
           end
         elsif select_this.alive == false && select_this != nil
           8.times do |a|
-            neighbour_select = @cells.select { |a| a.posx == select_this.neighbour[b].first && a.posy == select_this.neighbour[b].last }
+            neighbour_select = @board.return_cell(select_this.neighbour[b].first, select_this.neighbour[b].last)
 
-            if neighbour_select.first != nil
-              if neighbour_select.first.alive == true
+            if neighbour_select != nil
+              if neighbour_select.alive == true
                 c += 1
               end
             end
@@ -126,8 +126,8 @@ class Main
   end
 end
 
-board = Board.new
-main = Main.new(board)
+main = Main.new(board = Board.new)
+
 main.definenbtick
 board.definealive
 
