@@ -130,8 +130,12 @@ class Main
   end
 end
 
-main = Main.new(board = Board.new)
+print "please enter the width: "
+wanted_width = STDIN.gets.chomp.to_i
+print "please enter the height: "
+wanted_heigh = STDIN.gets.chomp.to_i
 
+main = Main.new(board = Board.new(wanted_width, wanted_heigh))
 main.definenbtick
 board.definealive
 

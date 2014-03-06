@@ -7,7 +7,7 @@ describe Main do
   end
 
   describe 'test: cell' do
-    let(:board) { Board.new(30, 30) }
+    let(:board) { Board.new }
     let(:main) { Main.new(board) }
 
     before(:each) do

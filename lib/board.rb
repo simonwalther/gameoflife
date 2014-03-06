@@ -61,7 +61,7 @@ class Board
       if select_this.alive == true
         grid << "O "
       elsif select_this.alive == false
-        grid << "~ "
+        grid << ". "
       end
 
       if b == @width
@@ -84,8 +84,10 @@ class Board
   end
 
   def return_cell(x, y)
-    if x < 1 || x > width || y < 1 || y > height
-
+    if x < 1 || x > width
+      nil
+    elsif y < 1 || y > height
+      nil
     else
       cells[(y - 1) * width + (x - 1)]
     end
