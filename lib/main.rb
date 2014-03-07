@@ -25,6 +25,11 @@ class Main
     select_neighbour_of_alive = Array.new
     select_neighbour_of_neighbour_of_alive = Array.new
 
+    if cell_with_status_alive.empty?
+      puts "les cellules sont toutes mortes"
+      exit
+    end
+
     cell_with_status_alive.length.times do |r|
       neighbour_of_alive << cell_with_status_alive[r].neighbour
     end
@@ -130,22 +135,34 @@ class Main
   end
 end
 
-print "please enter the width: "
-wanted_width = STDIN.gets.chomp.to_i
-print "please enter the height: "
-wanted_heigh = STDIN.gets.chomp.to_i
+#########  configure the board size ##########
+boardconfig = File.open("boardconfig.txt")
+h = 0
+wanted_width = 0
+wanted_height = 0
 
-main = Main.new(board = Board.new(wanted_width, wanted_heigh))
-main.definenbtick
+boardconfig.each do |line|
+  if h == 0
+    wanted_width = line.chomp.to_i
+  elsif h == 1
+    wanted_height = line.chomp.to_i
+  end
+
+  h+=1
+end
+################################################
+
+main = Main.new(board = Board.new(wanted_width, wanted_height))
+
 board.definealive
-
+main.definenbtick
 nb_tick = main.nb_tick
 
 cell = board.cells[1]
 
-nb_tick.times do
+nb_tick.times do |c|
   board.displayboard
   main.isalive
-  sleep(0.3)
+  sleep(0.2)
   system "clear" or system "cls"
 end

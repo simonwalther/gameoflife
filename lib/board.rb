@@ -23,30 +23,60 @@ class Board
   end
 
   def definealive
-    puts "please enter alive @cells position"
-    puts "to stop enter two times 'stop'"
-    inputx = nil
-    inputy = nil
-    cell_alives = Array.new
+    # puts "please enter alive @cells position"
+    # puts "to stop enter two times 'stop'"
+    # inputx = nil
+    # inputy = nil
+    # cell_alives = Array.new
 
-    until inputx == "stop" || inputy == "stop" do
-      pos = Array.new
-      print "position x: "
-      inputx = STDIN.gets.chomp
-      print "position y: "
-      inputy = STDIN.gets.chomp
+    # until inputx == "stop" || inputy == "stop" do
+    #   pos = Array.new
+    #   print "position x: "
+    #   inputx = STDIN.gets.chomp
+    #   print "position y: "
+    #   inputy = STDIN.gets.chomp
 
-      if inputx != "stop" && inputy != "stop"
-        pos << inputx.to_i << inputy.to_i
-        cell_alives << pos
+    #   if inputx != "stop" && inputy != "stop"
+    #     pos << inputx.to_i << inputy.to_i
+    #     cell_alives << pos
+    #   end
+    # end
+
+    # puts "#{cell_alives}"
+
+    # cell_alives.each do |cell_alive|
+    #   select_this = @cells.select { |a| a.posx == cell_alive.first && a.posy == cell_alive.last }.first
+    #   select_this.alive = true
+    # end
+    b = 1
+
+    alivefile = File.open("alive.txt", "r+")
+      if File.zero?("alive.txt") == true
+        number_cell.times do |a|
+          alivefile.putc("-")
+
+          if b == @width
+            alivefile.putc("\n")
+            b = 0
+          end
+
+          b += 1
+        end
+        puts "file alive.txt has been regenerate"
+        exit
       end
-    end
 
-    puts "#{cell_alives}"
+    alivefile.rewind
 
-    cell_alives.each do |cell_alive|
-      select_this = @cells.select { |a| a.posx == cell_alive.first && a.posy == cell_alive.last }.first
-      select_this.alive = true
+    g = 0
+    alivefile.size.times do
+      select_char = alivefile.getc.chr
+      if select_char == "O"
+        g += 1
+        @cells[g].alive = true
+      elsif select_char == "-"
+        g += 1
+      end
     end
   end
 
@@ -61,7 +91,7 @@ class Board
       if select_this.alive == true
         grid << "O "
       elsif select_this.alive == false
-        grid << ". "
+        grid << "- "
       end
 
       if b == @width
@@ -71,6 +101,7 @@ class Board
 
       b += 1
     end
+
     print "#{grid.join}"
     puts "\n"
   end
