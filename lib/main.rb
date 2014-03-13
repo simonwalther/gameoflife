@@ -30,6 +30,7 @@ class Main
   end
 
   def isalive
+    ############# cell to test ############
     cell_with_status_alive = Array.new
     cell_with_status_alive = @cells.select { |a| a.alive == true }
     cell_to_test = Array.new
@@ -41,38 +42,39 @@ class Main
     if cell_with_status_alive.empty?
       puts "les cellules sont toutes mortes"
       exit
-    end
-
-    cell_with_status_alive.length.times do |r|
-      neighbour_of_alive << cell_with_status_alive[r].neighbour
-    end
-
-    neighbour_of_alive.length.times do |g|
-      neighbour_of_alive[g].length.times do |k|
-        tamp = @board.return_cell(neighbour_of_alive[g][k].first, neighbour_of_alive[g][k].last)
-        select_neighbour_of_alive << tamp
+    else
+      cell_with_status_alive.length.times do |r|
+        neighbour_of_alive << cell_with_status_alive[r].neighbour
       end
+
+      neighbour_of_alive.length.times do |g|
+        neighbour_of_alive[g].length.times do |k|
+          tamp = @board.return_cell(neighbour_of_alive[g][k].first, neighbour_of_alive[g][k].last)
+          select_neighbour_of_alive << tamp
+        end
+      end
+
+      neighbour_of_alive = []
+
+      select_neighbour_of_alive.length.times do |q|
+        neighbour_of_alive << select_neighbour_of_alive[q]
+      end
+
+      neighbour_of_alive = neighbour_of_alive.compact
+
+      neighbour_of_alive.length.times do |l|
+        tamp = @board.return_cell(neighbour_of_alive[l].posx, neighbour_of_alive[l].posy)
+        select_neighbour_of_neighbour_of_alive << tamp
+      end
+
+      select_neighbour_of_neighbour_of_alive.length.times do |f|
+        neighbour_of_neighbour_of_alive << select_neighbour_of_alive[f]
+      end
+
+      cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive
+      cell_to_test = cell_to_test.uniq.compact
     end
-
-    neighbour_of_alive = []
-
-    select_neighbour_of_alive.length.times do |q|
-      neighbour_of_alive << select_neighbour_of_alive[q]
-    end
-
-    neighbour_of_alive = neighbour_of_alive.compact
-
-    neighbour_of_alive.length.times do |l|
-      tamp = @board.return_cell(neighbour_of_alive[l].posx, neighbour_of_alive[l].posy)
-      select_neighbour_of_neighbour_of_alive << tamp
-    end
-
-    select_neighbour_of_neighbour_of_alive.length.times do |f|
-      neighbour_of_neighbour_of_alive << select_neighbour_of_alive[f]
-    end
-
-    cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive
-    cell_to_test = cell_to_test.uniq.compact
+    ###################################
 
     cell_to_test.length.times do |z|
       cell_to_test[z].length.times do |r|
@@ -82,50 +84,36 @@ class Main
         c = 0
 
         if select_this != nil
+          8.times do |a|
+            neighbour_select = @board.return_cell(select_this.neighbour[b].first, select_this.neighbour[b].last)
+
+            if neighbour_select != nil
+              if neighbour_select.alive == true
+                c += 1
+              end
+            end
+
+            b += 1
+          end
+
           if select_this.alive == true
-            8.times do |a|
-              neighbour_select = @board.return_cell(select_this.neighbour[b].first, select_this.neighbour[b].last)
-
-              if neighbour_select != nil
-                if neighbour_select.alive == true
-                  c += 1
-                end
+            @casses_of_life.each do |this|
+              if c == this.to_i
+                #la cellule nait"
+                select_this.alive_next_step = true
               end
-
-              b += 1
             end
-
-            if c == @casses_of_life[0].to_i || c == @casses_of_life[1].to_i || c == @casses_of_life[2].to_i || c == @casses_of_life[3].to_i || c == @casses_of_life[4].to_i || c == @casses_of_life[5].to_i || c == @casses_of_life[6].to_i || c == @casses_of_life[7].to_i
-              #la cellule restera vivante
-              select_this.alive_next_step = true
-            else
-              #la cellule meurt
-              select_this.alive_next_step = false
-            end
-          elsif select_this.alive == false && select_this != nil
-            8.times do |a|
-              neighbour_select = @board.return_cell(select_this.neighbour[b].first, select_this.neighbour[b].last)
-
-              if neighbour_select != nil
-                if neighbour_select.alive == true
-                  c += 1
-                end
+          elsif select_this.alive == false || select_this != nil
+            @casses_of_birth.each do |this|
+              if c == this.to_i
+                #la cellule nait"
+                select_this.alive_next_step = true
               end
-
-              b += 1
-            end
-
-            if c == @casses_of_birth[0].to_i || c == @casses_of_birth[1].to_i || c == @casses_of_birth[2].to_i || c == @casses_of_birth[3].to_i || c == @casses_of_birth[4].to_i || c == @casses_of_birth[5].to_i || c == @casses_of_birth[6].to_i || c == @casses_of_birth[7].to_i
-              #la cellule nait"
-              select_this.alive_next_step = true
-            else
-              #la cellule restera morte
-              select_this.alive_next_step = false
             end
           end
-        end
 
-        c = 0 #reset
+          c = 0
+        end
       end
     end
 
