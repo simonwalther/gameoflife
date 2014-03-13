@@ -2,3 +2,70 @@ width:
 50
 height:
 50
+cases of life:
+1
+cases of birth:
+1
+---------------------
+conway's game of life
+---------------------
+cases of life:
+23
+cases of birth:
+3
+--------------------------
+game of life without death
+--------------------------
+cases of life:
+12345678
+cases of birth:
+3
+-----------------------------------------
+game of life hightlife (without rules 90)
+-----------------------------------------
+cases of life:
+23
+cases of birth:
+36
+--------------------------
+game of life day and night
+--------------------------
+cases of life:
+34678
+cases of birth:
+3678
+-----------
+test: biome
+-----------
+cases of life:
+23
+cases of birth:
+123
+----------
+test: maze
+----------
+cases of life:
+2345
+cases of birth:
+123
+----------
+test: onde
+----------
+cases of life:
+
+cases of birth:
+1234567
+-----------
+test: cloud
+-----------
+cases of life:
+1367
+cases of birth:
+2468
+----------------
+test: duplicator
+----------------
+cases of life:
+2468
+cases of birth:
+1357

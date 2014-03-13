@@ -10,6 +10,19 @@ class Main
     @width = board.width
     @nb_tick = nb_tick
     @cells = board.cells
+    boardconfig = File.open("boardconfig.txt")
+    h = 0
+
+    boardconfig.each do |line|
+      if h == 5
+        casses_of_life = line.chomp
+        @casses_of_life = casses_of_life.split(//)
+      elsif h == 7
+        casses_of_birth = line.chomp
+        @casses_of_birth = casses_of_birth.split(//)
+      end
+      h+= 1
+    end
 
     ##### initialize @cells #####
     cell = @cells[1]
@@ -82,7 +95,7 @@ class Main
               b += 1
             end
 
-            if c == 2 || c == 3
+            if c == @casses_of_life[0].to_i || c == @casses_of_life[1].to_i || c == @casses_of_life[2].to_i || c == @casses_of_life[3].to_i || c == @casses_of_life[4].to_i || c == @casses_of_life[5].to_i || c == @casses_of_life[6].to_i || c == @casses_of_life[7].to_i
               #la cellule restera vivante
               select_this.alive_next_step = true
             else
@@ -102,7 +115,7 @@ class Main
               b += 1
             end
 
-            if c == 3
+            if c == @casses_of_birth[0].to_i || c == @casses_of_birth[1].to_i || c == @casses_of_birth[2].to_i || c == @casses_of_birth[3].to_i || c == @casses_of_birth[4].to_i || c == @casses_of_birth[5].to_i || c == @casses_of_birth[6].to_i || c == @casses_of_birth[7].to_i
               #la cellule nait"
               select_this.alive_next_step = true
             else
@@ -142,12 +155,11 @@ wanted_width = 0
 wanted_height = 0
 
 boardconfig.each do |line|
-  if h == 0
+  if h == 1
     wanted_width = line.chomp.to_i
-  elsif h == 1
+  elsif h == 3
     wanted_height = line.chomp.to_i
   end
-
   h+=1
 end
 ################################################

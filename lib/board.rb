@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Board
   attr_accessor :cells, :width, :height, :number_cell, :cells_length
 
@@ -23,31 +25,6 @@ class Board
   end
 
   def definealive
-    # puts "please enter alive @cells position"
-    # puts "to stop enter two times 'stop'"
-    # inputx = nil
-    # inputy = nil
-    # cell_alives = Array.new
-
-    # until inputx == "stop" || inputy == "stop" do
-    #   pos = Array.new
-    #   print "position x: "
-    #   inputx = STDIN.gets.chomp
-    #   print "position y: "
-    #   inputy = STDIN.gets.chomp
-
-    #   if inputx != "stop" && inputy != "stop"
-    #     pos << inputx.to_i << inputy.to_i
-    #     cell_alives << pos
-    #   end
-    # end
-
-    # puts "#{cell_alives}"
-
-    # cell_alives.each do |cell_alive|
-    #   select_this = @cells.select { |a| a.posx == cell_alive.first && a.posy == cell_alive.last }.first
-    #   select_this.alive = true
-    # end
     b = 1
 
     alivefile = File.open("alive.txt", "r+")
@@ -89,9 +66,9 @@ class Board
       select_this = @cells[a]
 
       if select_this.alive == true
-        grid << "O "
+        grid << "█ "
       elsif select_this.alive == false
-        grid << "- "
+        grid << "  "
       end
 
       if b == @width
