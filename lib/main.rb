@@ -42,38 +42,33 @@ class Main
     if cell_with_status_alive.empty?
       puts "les cellules sont toutes mortes"
       exit
-    else
-      cell_with_status_alive.length.times do |r|
-        neighbour_of_alive << cell_with_status_alive[r].neighbour
-      end
-
-      neighbour_of_alive.length.times do |g|
-        neighbour_of_alive[g].length.times do |k|
-          tamp = @board.return_cell(neighbour_of_alive[g][k].first, neighbour_of_alive[g][k].last)
-          select_neighbour_of_alive << tamp
-        end
-      end
-
-      neighbour_of_alive = []
-
-      select_neighbour_of_alive.length.times do |q|
-        neighbour_of_alive << select_neighbour_of_alive[q]
-      end
-
-      neighbour_of_alive = neighbour_of_alive.compact
-
-      neighbour_of_alive.length.times do |l|
-        tamp = @board.return_cell(neighbour_of_alive[l].posx, neighbour_of_alive[l].posy)
-        select_neighbour_of_neighbour_of_alive << tamp
-      end
-
-      select_neighbour_of_neighbour_of_alive.length.times do |f|
-        neighbour_of_neighbour_of_alive << select_neighbour_of_alive[f]
-      end
-
-      cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive
-      cell_to_test = cell_to_test.uniq.compact
     end
+
+    cell_with_status_alive.each do |this| #parcourt toutes les cellules vivantes
+      neighbour_of_alive << this.neighbour #met les coordonées des voisines dans la variables neighbourg of alive
+    end
+
+    neighbour_of_alive.length.times do |g| #parcourt les voisins des cellules vivantes
+      neighbour_of_alive[g].length.times do |k|
+        tamp = @board.return_cell(neighbour_of_alive[g][k].first, neighbour_of_alive[g][k].last) #cherche les cellules cellules voisines des vivantes
+        select_neighbour_of_alive << tamp #rajoute ces cellules dans neighbour of alive
+      end
+    end
+
+    puts "#{neighbour_of_alive}"
+
+    neighbour_of_alive = [] #réinitialise l'array neighbour of alive
+    neighbour_of_alive = select_neighbour_of_alive.compact #neighbour of alive est rendu égal à lui même sans les cellules nil
+
+    neighbour_of_alive.each do |this| #on parcourt neighbour of alive
+      select_neighbour_of_neighbour_of_alive << @board.return_cell(this.posx, this.posy) #on ajoute dans select neighbour of neighbour of alive les cellules voisines des cellules vivantes
+    end
+
+    select_neighbour_of_neighbour_of_alive.length.times do |f| #on parcourt select neighbour of neighbour of alive
+      neighbour_of_neighbour_of_alive << select_neighbour_of_alive[f] #on ajoute le contenu de select neighbour of alive dans neighbour of neighbour alive
+    end
+
+    cell_to_test = (cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive).uniq.compact #on ajoute tout les cellules vivantes ou voisines de vivantes ou voisines de voisines de vivantes et on supprime les cellules à nil ou inexistantes
     ###################################
 
     cell_to_test.length.times do |z|
@@ -163,6 +158,6 @@ cell = board.cells[1]
 nb_tick.times do |c|
   board.displayboard
   main.isalive
-  sleep(0.2)
+  sleep(0.15)
   system "clear" or system "cls"
 end

@@ -62,10 +62,17 @@ cases of life:
 1367
 cases of birth:
 2468
-----------------
-test: duplicator
-----------------
+-----------------------
+test: something strange
+-----------------------
 cases of life:
-2468
+123678
 cases of birth:
-1357
+45
+-----------
+test: virus
+-----------
+cases of life:
+3678
+cases of birth:
+3458

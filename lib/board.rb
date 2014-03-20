@@ -80,7 +80,6 @@ class Board
     end
 
     print "#{grid.join}"
-    puts "\n"
   end
 
   def cells_length
