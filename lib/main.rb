@@ -48,8 +48,13 @@ class Main
       this.neighbour.length.times do |z|
         tamp = @board.return_cell(this.neighbour[z].first, this.neighbour[z].last)
         neighbour_of_alive << tamp
-        neighbour_of_neighbour_of_alive << @board.return_cell(neighbour_of_alive[z].posx, neighbour_of_alive[z].posy)
       end
+    end
+
+    neighbour_of_alive = neighbour_of_alive.compact
+
+    neighbour_of_alive.length.times do |x|
+      neighbour_of_neighbour_of_alive << @board.return_cell(neighbour_of_alive[x].posx, neighbour_of_alive[x].posy)
     end
 
     cell_to_test = (cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive).uniq.compact
