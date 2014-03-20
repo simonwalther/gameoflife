@@ -36,8 +36,6 @@ class Main
     cell_to_test = Array.new
     neighbour_of_alive = Array.new
     neighbour_of_neighbour_of_alive = Array.new
-    select_neighbour_of_alive = Array.new
-    select_neighbour_of_neighbour_of_alive = Array.new
 
     if cell_with_status_alive.empty?
       puts "les cellules sont toutes mortes"
@@ -116,7 +114,7 @@ class Main
 
   def definenbtick
     print "please enter the number of tick: "
-    @nb_tick = STDIN.gets.chomp.to_i
+    @nb_tick = (STDIN.gets.chomp.to_i + 1)
   end
 end
 
@@ -145,6 +143,7 @@ nb_tick = main.nb_tick
 cell = board.cells[1]
 
 nb_tick.times do |c|
+  puts "tick = #{c}"
   board.displayboard
   main.isalive
   sleep(0.15)

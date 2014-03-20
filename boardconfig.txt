@@ -3,9 +3,9 @@ width:
 height:
 50
 cases of life:
-23
+
 cases of birth:
-3
+234
 ---------------------
 conway's game of life
 ---------------------
@@ -76,3 +76,17 @@ cases of life:
 3678
 cases of birth:
 3458
+----------
+replicator
+----------
+cases of life:
+1357
+cases of birth:
+1357
+-------------
+walled cities
+-------------
+cases of life:
+2345
+cases of birth:
+45678

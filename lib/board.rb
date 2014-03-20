@@ -68,7 +68,7 @@ class Board
       if select_this.alive == true
         grid << "█ "
       elsif select_this.alive == false
-        grid << "  "
+        grid << "~~"
       end
 
       if b == @width
