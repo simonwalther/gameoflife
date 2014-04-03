@@ -1,0 +1,16 @@
+bin/
+    gameoflife
+lib/
+    gameoflife.rb
+    gameoflife/
+                board.rb
+                cell.rb
+                game.rb
+                game/rules.rb
+                game/rules/conway.rb
+                           toto.rb
+                cli.rb
+
+class Conway < Rules::Base
+
+end

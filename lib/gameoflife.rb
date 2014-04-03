@@ -1,0 +1,3 @@
+module Gameoflife
+
+end

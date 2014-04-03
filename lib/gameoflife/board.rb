@@ -27,7 +27,7 @@ class Board
   def definealive
     b = 1
 
-    alivefile = File.open("alive.txt", "r+")
+    alivefile = File.open(File.expand_path("..",Dir.pwd) + "/config/alive.txt", "r+")
       if File.zero?("alive.txt") == true
         number_cell.times do |a|
           alivefile.putc("-")

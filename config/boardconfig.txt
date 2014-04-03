@@ -3,9 +3,9 @@ width:
 height:
 50
 cases of life:
-
+23
 cases of birth:
-234
+3
 ---------------------
 conway's game of life
 ---------------------
