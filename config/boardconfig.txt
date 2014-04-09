@@ -1,7 +1,3 @@
-width:
-50
-height:
-50
 cases of life:
 23
 cases of birth:

@@ -3,57 +3,58 @@
 class Board
   attr_accessor :cells, :width, :height, :number_cell, :cells_length
 
-  def initialize(width = 50, height = 50)
+  def initialize(board_path)
+    alivefile = File.open(board_path, "r+")
     @cells = Array.new
-    @width = width
-    @height = height
+    @height = 0
+    @width = 0
+
+    character_alive = Array.new
+
+    if File.zero?(board_path) == true
+      number_cell.times do |count|
+        alivefile.putc("-")
+
+        if (count + 1) % @width == 0
+          alivefile.putc("\n")
+        end
+      end
+      puts 'file ' + board_path + ' has been regenerate'
+    end
+
+    character = 0
+    alivefile.size.times do
+      select_char = alivefile.getc.chr
+      if select_char == "O"
+        character_alive[character] = true
+        character += 1
+      elsif select_char == "-"
+        character_alive[character] = false
+        character += 1
+      elsif select_char == "\n"
+        @height += 1
+      end
+    end
+
+    @width = (character/@height)
+
     @number_cell = @width * @height
 
     a = 1
     b = 1
+    number_cell.times do |this_cell|
+      if character_alive[this_cell] == true
+        @cells << Cell.new(a, b, true)
+      elsif character_alive[this_cell] == false
+        @cells << Cell.new(a, b, false)
+      end
 
-    number_cell.times do
-      cells << Cell.new(a, b, false)
-
-      a += 1
-
-      if a == (@width + 1)
+      if (this_cell + 1) % @width == 0
         a = 1
         b += 1
       end
-    end
-  end
 
-  def definealive
-    b = 1
-
-    alivefile = File.open(File.expand_path("..",Dir.pwd) + "/config/alive.txt", "r+")
-      if File.zero?("alive.txt") == true
-        number_cell.times do |a|
-          alivefile.putc("-")
-
-          if b == @width
-            alivefile.putc("\n")
-            b = 0
-          end
-
-          b += 1
-        end
-        puts "file alive.txt has been regenerate"
-        exit
-      end
-
-    alivefile.rewind
-
-    g = 0
-    alivefile.size.times do
-      select_char = alivefile.getc.chr
-      if select_char == "O"
-        g += 1
-        @cells[g].alive = true
-      elsif select_char == "-"
-        g += 1
-      end
+      a += 1
     end
   end
 
@@ -84,10 +85,6 @@ class Board
 
   def cells_length
     cells_length = cells.length
-  end
-
-  def cells
-    @cells
   end
 
   def return_cell(x, y)

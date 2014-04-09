@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
-$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib/gameoflife'))
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-require '../lib/gameoflife/cli'
-require '../lib/gameoflife/game.rb'
+require 'gameoflife/cli'
+
+Gameoflife::Cli.start(ARGV)
+
+#########  configure the board size #########
+boardconfig = File.open(File.expand_path(__FILE__ + "/../../config/boardconfig.txt"))

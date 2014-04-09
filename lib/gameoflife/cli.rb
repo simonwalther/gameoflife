@@ -1,30 +1,50 @@
-require "Thor"
+require "thor"
+require "gameoflife/board"
+require "gameoflife/game"
 
-class Cli < Thor
-   # play [--rule=conway] --tick=1000 --result=result.txt file.txt
-   # generate --width --height --file=file.txt
-   # rules
+module Gameoflife
+  class Cli < Thor
+     # play [--rule=conway] --tick=1000 --result=result.txt file.txt
+     # generate --width --height --file=file.txt
+     # rules
 
-  desc "generate WIDTH HEIGHT", "generate a file with the good width and height"
+    DEFAULT_BOARD_PATH = File.expand_path(__FILE__ + '/../../../config/alive.txt')
 
-  def generate(width, height)
-    b = 1
+    desc "generate <BOARD FILE>", "generate the board file with the good width and height"
+    option :width, type: :numeric, default: 10, aliases: :w
+    option :height, type: :numeric, default: 10, aliases: :h
+    def generate(board_path = DEFAULT_BOARD_PATH)
+      width = options[:width]
+      height = options[:height]
 
-    alivefile = File.open(File.expand_path("..",Dir.pwd) + "/config/alive.txt", "w")
+      File.open(board_path, 'w') do |alivefile|
+        (width * height).times do |count|
+          alivefile.putc("-")
 
-    (width.to_i * height.to_i).times do |a|
-      alivefile.putc("-")
-
-      if b == width.to_i
-        alivefile.putc("\n")
-        b = 0
+          if (count + 1) % width == 0
+            alivefile.putc("\n")
+          end
+        end
       end
 
-      b += 1
+      puts "file '#{board_path}' has been generated"
     end
 
-    puts "file alive.txt has been regenerated"
-    exit
+    desc "play <BOARD FILE>", "generate the board file with another file and run it"
+    option :ticks, type: :numeric, default: 500, aliases: :t
+    def play(board_path = DEFAULT_BOARD_PATH)
+      board = Board.new(board_path)
+      game = Game.new(board)
+
+      board.displayboard
+
+      options[:ticks].times do |t|
+        puts "t: #{t}"
+        game.isalive
+        board.displayboard
+        sleep(0.15)
+        system "clear" or system "cls"
+      end
+    end
   end
 end
-
