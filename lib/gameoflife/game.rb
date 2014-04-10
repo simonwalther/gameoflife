@@ -37,7 +37,6 @@ module Gameoflife
       neighbour_of_alive = Array.new
       neighbour_of_neighbour_of_alive = Array.new
 
-
       if cell_with_status_alive.empty?
         puts "les cellules sont toutes mortes"
         exit
@@ -62,43 +61,50 @@ module Gameoflife
       cell_to_test.length.times do |z|
         cell_to_test[z].length.times do |r|
           select_this = cell_to_test[z][r]
+
+          b = 0
           c = 0
 
-          select_this.neighbour.length.times do |a|
-            neighbour_select = @board.return_cell(select_this.neighbour[a].first, select_this.neighbour[a].last)
+          if select_this != nil
+            8.times do |a|
+              neighbour_select = @board.return_cell(select_this.neighbour[b].first, select_this.neighbour[b].last)
+              if neighbour_select != nil
+                if neighbour_select.alive == true
+                  c += 1
+                end
+              end
 
-            if neighbour_select != nil
-              if neighbour_select.alive == true
-                c += 1
-              end
+              b += 1
             end
-          end
 
-          if select_this.alive == true
-            @casses_of_life.each do |this|
-              if c == this.to_i
-                #la cellule reste en vie"
-                select_this.alive_next_step = true
+            if select_this.alive == true
+              @casses_of_life.each do |this|
+                if c == this.to_i
+                  #la cellule nait"
+                  select_this.alive_next_step = true
+                end
+              end
+            elsif select_this.alive == false || select_this != nil
+              @casses_of_birth.each do |this|
+                if c == this.to_i
+                  #la cellule nait"
+                  select_this.alive_next_step = true
+                end
               end
             end
-          elsif select_this.alive == false
-            @casses_of_birth.each do |this|
-              if c == this.to_i
-                #la cellule nait"
-                select_this.alive_next_step = true
-              end
-            end
+
+            c = 0
           end
         end
-
       end
 
       number_cell.times do |a|
         select_this = @cells[a]
+
         if select_this.alive_next_step == nil
           select_this.alive = false
-        elsif select_this.alive_next_step == true
-          select_this.alive = true
+        else
+          select_this.alive = select_this.alive_next_step
         end
 
         select_this.alive_next_step = nil

@@ -22,35 +22,35 @@ class Board
       puts 'file ' + board_path + ' has been regenerate'
     end
 
-    character = 0
+    g = 0
     alivefile.size.times do
       select_char = alivefile.getc.chr
       if select_char == "O"
-        character_alive[character] = true
-        character += 1
+        character_alive[g] = true
+        g += 1
       elsif select_char == "-"
-        character_alive[character] = false
-        character += 1
+        g += 1
       elsif select_char == "\n"
         @height += 1
       end
     end
 
-    @width = (character/@height)
+    @width = (g/@height)
 
     @number_cell = @width * @height
 
     a = 1
     b = 1
+
     number_cell.times do |this_cell|
-      if character_alive[this_cell] == true
+      if character_alive[this_cell]
         @cells << Cell.new(a, b, true)
-      elsif character_alive[this_cell] == false
+      else
         @cells << Cell.new(a, b, false)
       end
 
       if (this_cell + 1) % @width == 0
-        a = 1
+        a = 0
         b += 1
       end
 
