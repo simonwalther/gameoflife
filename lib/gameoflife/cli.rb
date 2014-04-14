@@ -39,11 +39,11 @@ module Gameoflife
 
     def play(board_path = DEFAULT_BOARD_PATH, rules_path = DEFAULT_RULES_PATH)
       board = Board.new(board_path)
-      game = Game.new(board)
       sleep_time = options[:sleep_time]
       nb_ticks = options[:ticks]
       rules = options[:rules]
       rules_file = File.open(rules_path, "r+")
+      rules_found = false
       read_name = true
       read_cases_of_life = false
       read_cases_of_birth = false
@@ -52,44 +52,54 @@ module Gameoflife
       cases_of_life = Array.new
       cases_of_birth = Array.new
 
-      until name == rules && end_of_cases == true || rules_file.eof? == true
-        rules_file.size.times do
-          select_char = rules_file.getc.chr
+      ################# rules parser #################
+      until rules_found == true && end_of_cases == true || rules_file.eof? == true
+        select_char = rules_file.getc.chr
 
-          if read_name == true
-            name << select_char
-          elsif read_cases_of_life == true
+        ### condition suivant l'etape ou l'on se trouve ###
+        if read_name == true
+          name << select_char
+        end
+
+        if name == rules
+          rules_found = true
+          if read_cases_of_life == true
             cases_of_life << select_char
           elsif read_cases_of_birth == true
             cases_of_birth << select_char
-          elsif end_of_cases == true && name != rules
-            name = Array.new
-            cases_of_life = Array.new
-            cases_of_birth = Array.new
           end
+        end
 
-          if select_char == "{"
-            if (name.is_a? String) == false
-              name = (name.join.chomp('{')).gsub!(/\s+/, "")
-            end
-            read_name = false
-            read_cases_of_life = true
-          elsif select_char == ","
-            read_cases_of_life = false
-            read_cases_of_birth = true
-          elsif select_char == "}"
-            read_cases_of_birth = false
-            end_of_cases = true
-          elsif end_of_cases == true && read_cases_of_birth == false && read_cases_of_life == false && read_name == false && name != rules
-            end_of_cases = false
-            read_name = true
+        ### detection des caracteres delimitant les variables ###
+        if select_char == "{"
+          if (name.is_a? String) == false
+            name = name.join
+            name = name.chomp('{').gsub!(/\s+/, "")
+          else
+            name = name.chomp('{').gsub!(/\s+/, "")
           end
+          read_name = false
+          read_cases_of_life = true
+        elsif select_char == ","
+          read_cases_of_life = false
+          read_cases_of_birth = true
+        elsif select_char == "}"
+          read_cases_of_birth = false
+          end_of_cases = true
+        elsif end_of_cases == true && rules_found == false
+          name = name.clear
+          cases_of_life = cases_of_life.clear
+          cases_of_birth = cases_of_birth.clear
+          end_of_cases = false
+          read_name = true
         end
       end
 
-      cases_of_life = cases_of_life.join.chomp(',').to_i
-      cases_of_birth = cases_of_birth.join.chomp("}\n").to_i
+      cases_of_life = cases_of_life.join.chomp(',').split(//)
+      cases_of_birth = cases_of_birth.join.chomp("}").split(//)
       puts "[NAME = #{name}] [LIFE = #{cases_of_life}] [BIRTH = #{cases_of_birth}]"
+      ################# end of rules parser #################
+      game = Game.new(board, cases_of_life, cases_of_birth)
 
       if options[:dry]
         sleep_time = 0

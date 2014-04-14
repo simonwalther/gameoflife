@@ -5,25 +5,13 @@ module Gameoflife
   class Game
     attr_accessor :number_cell, :cells_length, :nb_tick
 
-    def initialize(board = Board.new)
+    def initialize(board = Board.new, casses_of_life, casses_of_birth)
       @board = board
       @number_cell = board.number_cell
       @width = board.width
       @cells = board.cells
-      boardconfig = File.open(File.expand_path(__FILE__ + "/../../../config/boardconfig.txt"))
-      h = 0
-
-      boardconfig.each do |line|
-        if h == 1
-          casses_of_life = line.chomp
-          @casses_of_life = casses_of_life.split(//)
-        elsif h == 3
-          casses_of_birth = line.chomp
-          @casses_of_birth = casses_of_birth.split(//)
-        end
-        h += 1
-      end
-
+      @casses_of_life = casses_of_life
+      @casses_of_birth = casses_of_birth
       ##### initialize @cells #####
       cell = @cells[1]
       @neighbour = cell.neighbour
