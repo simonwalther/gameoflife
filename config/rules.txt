@@ -1,2 +1,12 @@
 conway {23,3}
 without_death {12345678,3}
+hightlife {23,36}
+day_and_night {34678,3678}
+biome {23,123}
+maze {2345,123}
+onde { ,1234567}
+cloud {1367,2468}
+strange {123678,45}
+virus {3678,3678}
+replicator {1357,1357}
+wall {2345,45678}

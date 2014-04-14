@@ -118,11 +118,11 @@ module Gameoflife
           puts "progress: #{progress} %"
         end
 
-        game.isalive
-
         if options[:dry] == false || (current_tick+1) == nb_ticks
           board.displayboard
         end
+
+        game.isalive
       end
     end
 
