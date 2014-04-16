@@ -1,14 +1,14 @@
 require 'spec_helper'
-require 'main'
+require 'game'
 
-describe Main do
+describe Game do
   context 'after created' do
-    subject { Main.new }
+    subject { Game.new }
   end
 
   describe 'test: cell' do
-    let(:board) { Board.new }
-    let(:main) { Main.new(board) }
+    let(:board) { Board.new(File.expand_path(__FILE__ + '/../../config/alive.txt')) }
+    let(:game) { Game.new(board, [2, 3], [3]) }
 
     before(:each) do
       @cells = board.cells
@@ -27,7 +27,7 @@ describe Main do
       expect(@cell.neighbour).to eq([[4, 5], [5, 4], [5, 5], [4, 3], [3, 4], [3, 3], [5, 3], [3, 5]])
     end
 
-    describe 'with alive true' do
+    describe 'with alive true and rule conway' do
       before(:each) do
         @cell.alive = true
       end
@@ -35,7 +35,7 @@ describe Main do
       describe 'with one neighbour alive' do
         before(:each) do
           @cell_neighbour_1.alive = true
-          main.isalive
+          game.isalive
         end
 
         it 'should become false' do
@@ -47,7 +47,7 @@ describe Main do
         before(:each) do
           @cell_neighbour_1.alive = true
           @cell_neighbour_2.alive = true
-          main.isalive
+          game.isalive
         end
 
         it 'should stay true' do
@@ -60,7 +60,7 @@ describe Main do
           @cell_neighbour_1.alive = true
           @cell_neighbour_2.alive = true
           @cell_neighbour_3.alive = true
-          main.isalive
+          game.isalive
         end
 
         it 'should stay true' do
@@ -74,7 +74,7 @@ describe Main do
           @cell_neighbour_2.alive = true
           @cell_neighbour_3.alive = true
           @cell_neighbour_4.alive = true
-          main.isalive
+          game.isalive
         end
 
         it 'should stay false' do
@@ -92,7 +92,7 @@ describe Main do
         before(:each) do
           @cell_neighbour_1.alive = true
           @cell_neighbour_2.alive = true
-          main.isalive
+          game.isalive
         end
 
         it 'should stay false' do
@@ -105,7 +105,7 @@ describe Main do
           @cell_neighbour_1.alive = true
           @cell_neighbour_2.alive = true
           @cell_neighbour_3.alive = true
-          main.isalive
+          game.isalive
         end
 
         it 'should become true' do
@@ -119,7 +119,7 @@ describe Main do
           @cell_neighbour_2.alive = true
           @cell_neighbour_3.alive = true
           @cell_neighbour_4.alive = true
-          main.isalive
+          game.isalive
         end
 
         it 'should stay false' do
