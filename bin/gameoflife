@@ -4,6 +4,3 @@ $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'gameoflife/cli'
 
 Gameoflife::Cli.start(ARGV)
-
-#########  configure the board size #########
-boardconfig = File.open(File.expand_path(__FILE__ + "/../../config/boardconfig.txt"))

@@ -1,13 +1,10 @@
 require "thor"
 require "gameoflife/board"
 require "gameoflife/game"
+require "gameoflife/rules"
 
 module Gameoflife
   class Cli < Thor
-     # play [--rule=conway] --tick=1000
-     # generate --width --height --file=file.txt
-     # rules
-
     DEFAULT_BOARD_PATH = File.expand_path(__FILE__ + '/../../../config/alive.txt')
     DEFAULT_RULES_PATH = File.expand_path(__FILE__ + '/../../../config/rules.txt')
 
@@ -40,72 +37,18 @@ module Gameoflife
     def play(board_path = DEFAULT_BOARD_PATH, rules_path = DEFAULT_RULES_PATH)
       board = Board.new(board_path)
       sleep_time = options[:sleep_time]
-      nb_ticks = options[:ticks]
-      rules = options[:rules]
-      rules_file = File.open(rules_path, "r+")
-      rules_found = false
-      read_name = true
-      read_cases_of_life = false
-      read_cases_of_birth = false
-      end_of_cases = false
-      name = Array.new
-      cases_of_life = Array.new
-      cases_of_birth = Array.new
+      nb_ticks = (options[:ticks] + 1)
 
-      ################# rules parser #################
-      until rules_found == true && end_of_cases == true || rules_file.eof? == true
-        select_char = rules_file.getc.chr
+      rules = Rules.new(rules_path)
+      rules.parse(options[:rules])
+      @cases_of_birth = rules.cases_of_birth
+      @cases_of_life = rules.cases_of_life
 
-        ### condition suivant l'etape ou l'on se trouve ###
-        if read_name == true
-          name << select_char
-        end
-
-        if name == rules
-          rules_found = true
-          if read_cases_of_life == true
-            cases_of_life << select_char
-          elsif read_cases_of_birth == true
-            cases_of_birth << select_char
-          end
-        end
-
-        ### detection des caracteres delimitant les variables ###
-        if select_char == "{"
-          if (name.is_a? String) == false
-            name = name.join
-            name = name.chomp('{').gsub!(/\s+/, "")
-          else
-            name = name.chomp('{').gsub!(/\s+/, "")
-          end
-          read_name = false
-          read_cases_of_life = true
-        elsif select_char == ","
-          read_cases_of_life = false
-          read_cases_of_birth = true
-        elsif select_char == "}"
-          read_cases_of_birth = false
-          end_of_cases = true
-        elsif end_of_cases == true && rules_found == false
-          name = name.clear
-          cases_of_life = cases_of_life.clear
-          cases_of_birth = cases_of_birth.clear
-          end_of_cases = false
-          read_name = true
-        end
-      end
-
-      cases_of_life = cases_of_life.join.chomp(',').split(//)
-      cases_of_birth = cases_of_birth.join.chomp("}").split(//)
-      puts "[NAME = #{name}] [LIFE = #{cases_of_life}] [BIRTH = #{cases_of_birth}]"
-      ################# end of rules parser #################
-      game = Game.new(board, cases_of_life, cases_of_birth)
+      game = Game.new(board, @cases_of_life, @cases_of_birth)
 
       if options[:dry]
         sleep_time = 0
       end
-
-      board.displayboard
 
       nb_ticks.times do |current_tick|
         sleep(sleep_time)
@@ -126,15 +69,21 @@ module Gameoflife
       end
     end
 
-    desc "rules <RULES_PATH> <NAME> <CASES_OF_LIFE> <CASES_OF_BIRTH>", "define a rule in the rules.txt file"
-    option :name, aliases: :n, :required => true
-    option :life, aliases: :l, :required => true
-    option :birth, aliases: :b, :required => true
+    desc "rules <RULES_PATH> <NAME> <CASES_OF_LIFE> <CASES_OF_BIRTH>", "define a rule in the rule file"
+    option :name, type: :string, aliases: :n
+    option :life, type: :numeric, aliases: :l
+    option :birth, type: :numeric, aliases: :b
 
-    def rules(rules_path = DEFAULT_RULES_PATH)
-      File.open(rules_path, "a") do |w|
-        w.puts "#{options[:name]} {#{options[:life]},#{options[:birth]}}"
-      end
+    def add_rules(rules_path = DEFAULT_RULES_PATH)
+      rules = Rules.new(rules_path)
+      rules.add(rules_path, options[:name], options[:life], options[:birth])
+    end
+
+    desc "remove_rules <RULES_PATH> <NAME>", "remove a rule from a rule file"
+    option :name, type: :string, aliases: :n, :require => true
+    def remove_rules(rules_path = DEFAULT_RULES_PATH)
+      rules = Rules.new(rules_path)
+      rules.remove(rules_path, options[:name])
     end
   end
 end
