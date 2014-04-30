@@ -1,11 +1,12 @@
 # encoding: utf-8
 
 class Board
-  attr_accessor :cells, :width, :height, :number_cell, :cells_length
+  attr_accessor :cells, :width, :height, :number_cell, :cells_length, :grid
 
   def initialize(board_path)
     alivefile = File.open(board_path, "r+")
     @cells = Array.new
+    @grid = Array.new
     @height = 0
     @width = 0
 
@@ -19,6 +20,7 @@ class Board
           alivefile.putc("\n")
         end
       end
+
       puts 'file ' + board_path + ' has been regenerate'
     end
 
@@ -59,7 +61,7 @@ class Board
   end
 
   def displayboard
-    grid = Array.new
+    @grid = @grid.clear
 
     b = 1
 
@@ -69,7 +71,7 @@ class Board
       if select_this.alive == true
         grid << "█ "
       elsif select_this.alive == false
-        grid << "~~"
+        grid << "  "
       end
 
       if b == @width

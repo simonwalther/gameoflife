@@ -75,10 +75,17 @@ class Rules
     end
 
     @cases_of_life = @cases_of_life.join.chomp(',').split(//)
+    @cases_of_life.size.times do |cases|
+      cases_of_life[cases] = cases_of_life[cases].to_i
+    end
+
     @cases_of_birth = @cases_of_birth.join.chomp("}").split(//)
-    puts "name: #{name}"
-    puts "life: #{cases_of_life}"
-    puts "birth: #{cases_of_birth}"
+    @cases_of_birth.size.times do |cases|
+      cases_of_birth[cases] = cases_of_birth[cases].to_i
+    end
+    puts "name | #{name}"
+    puts "life | #{cases_of_life}"
+    puts "birth| #{cases_of_birth}"
   end
 
   def add(rules_path, name, life, birth)

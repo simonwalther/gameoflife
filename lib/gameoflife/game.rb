@@ -22,7 +22,6 @@ class Game
     cell_with_status_alive = @cells.select { |a| a.alive == true }
     cell_to_test = Array.new
     neighbour_of_alive = Array.new
-    neighbour_of_neighbour_of_alive = Array.new
 
     if cell_with_status_alive.empty?
       puts "les cellules sont toutes mortes"
@@ -38,11 +37,7 @@ class Game
 
     neighbour_of_alive = neighbour_of_alive.compact
 
-    neighbour_of_alive.length.times do |x|
-      neighbour_of_neighbour_of_alive << @board.return_cell(neighbour_of_alive[x].posx, neighbour_of_alive[x].posy)
-    end
-
-    cell_to_test = (cell_to_test << cell_with_status_alive << neighbour_of_alive << neighbour_of_neighbour_of_alive).uniq.compact
+    cell_to_test = (cell_to_test << cell_with_status_alive << neighbour_of_alive).uniq.compact
     ###################################
 
     cell_to_test.length.times do |z|

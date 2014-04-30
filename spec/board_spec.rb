@@ -11,4 +11,16 @@ describe Board do
     its(:cells) { should_not == nil }
     its(:cells_length) { should == 180 }
   end
+
+  describe 'test: displayboard' do
+    let(:board) { Board.new(File.expand_path(__FILE__ + '/../../config/alive.txt')) }
+
+    before(:each) do
+      board.displayboard
+    end
+
+    it 'should have a no-empty grid' do
+      board.grid { should_not == nil }
+    end
+  end
 end
