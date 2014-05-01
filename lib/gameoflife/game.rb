@@ -44,32 +44,27 @@ class Game
       cell_to_test[z].length.times do |r|
         select_this = cell_to_test[z][r]
 
-        b = 0
         c = 0
 
         if select_this != nil
           8.times do |a|
-            neighbour_select = @board.return_cell(select_this.neighbour[b].first, select_this.neighbour[b].last)
+            neighbour_select = @board.return_cell(select_this.neighbour[a].first, select_this.neighbour[a].last)
             if neighbour_select != nil
               if neighbour_select.alive == true
                 c += 1
               end
             end
-
-            b += 1
           end
 
           if select_this.alive == true
             @casses_of_life.each do |this|
               if c == this.to_i
-                #la cellule nait"
                 select_this.alive_next_step = true
               end
             end
-          elsif select_this.alive == false || select_this != nil
+          elsif select_this.alive == false
             @casses_of_birth.each do |this|
               if c == this.to_i
-                #la cellule nait"
                 select_this.alive_next_step = true
               end
             end

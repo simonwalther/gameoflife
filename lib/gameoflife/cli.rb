@@ -37,6 +37,7 @@ module Gameoflife
     def play(board_path = DEFAULT_BOARD_PATH, rules_path = DEFAULT_RULES_PATH)
       board = Board.new(board_path)
       sleep_time = options[:sleep_time]
+      difference_time = 0.015625
       nb_ticks = (options[:ticks] + 1)
 
       rules = Rules.new(rules_path)
@@ -46,19 +47,23 @@ module Gameoflife
 
       game = Game.new(board, @cases_of_life, @cases_of_birth)
 
-      if options[:dry]
-        sleep_time = 0
-      end
-
       nb_ticks.times do |current_tick|
-        sleep(sleep_time)
+        if options[:dry]
+          sleep(0)
+        elsif sleep_time < difference_time
+          sleep(0.0025/difference_time)
+        elsif
+          sleep(sleep_time-difference_time)
+        end
+
+        starting_time = Time.now
         system "clear" or system "cls"
 
         if options[:dry] == false
-          puts "current_tick: #{current_tick}"
+          puts "current_tick: #{current_tick} execution time: #{difference_time}"
         else
           progress = ((current_tick+1)*100)/nb_ticks
-          puts "progress: #{progress} %"
+          puts "progress: #{progress} % execution time: #{difference_time}"
         end
 
         if options[:dry] == false || (current_tick+1) == nb_ticks
@@ -66,6 +71,8 @@ module Gameoflife
         end
 
         game.isalive
+        ending_time = Time.now
+        difference_time = ending_time - starting_time
       end
     end
 
